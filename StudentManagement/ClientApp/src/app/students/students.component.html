@@ -1,0 +1,79 @@
+<h1><span class="glyphicon glyphicon-user"></span> List of students</h1>
+<div>
+    <div class="row form-group">
+        <div class="col-xs-3">
+            <a [routerLink]="['/add']" class="btn btn-primary">
+                <span class="glyphicon glyphicon-plus"></span>
+                Add student
+            </a>
+        </div>
+        <div class="col-xs-3">
+            <div class="input-group">
+                <label class="input-group-addon" for="genderSelect">Gender</label>
+                <select #genderFilter id="genderSelect" class="form-control" (change)="filterStudents(textFilter.value, genderFilter.value)">
+                    <option selected="selected" value="">All</option>
+                    <option *ngFor="let gender of genders" value="{{gender.value}}">{{gender.name}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div class="input-group">
+                <label class="input-group-addon" for="search">
+                    <span class="glyphicon glyphicon-search"></span>
+                </label>
+                <input #textFilter type="search" id="search" class="form-control" placeholder="Search for Name or Identifier" (keyup)="filterStudents(textFilter.value, genderFilter.value)" (search)="filterStudents(textFilter.value, genderFilter.value)">
+            </div>
+        </div>
+    </div>
+
+    <p *ngIf="!(students)||!(genders)"><em><i class="glyphicon glyphicon-refresh spinning"></i> Loading...</em></p>
+    <div *ngIf="students?.length>0 && genders?.length>0" class="col-xs-12">
+        <table class="table table-sm table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">
+                        <a [href]="" (click)="sortStudents('fullName')">
+                            Full Name
+                            <span *ngIf="sortBy == 'fullName' && !sortReverse" class="glyphicon glyphicon-triangle-bottom"></span>
+                            <span *ngIf="sortBy == 'fullName' && sortReverse" class="glyphicon glyphicon-triangle-top"></span>
+                        </a>
+                    </th>
+                    <th scope="col">
+                        <a [href]="" (click)="sortStudents('gender')">
+                            Gender
+                            <span *ngIf="sortBy == 'gender' && !sortReverse" class="glyphicon glyphicon-triangle-bottom"></span>
+                            <span *ngIf="sortBy == 'gender' && sortReverse" class="glyphicon glyphicon-triangle-top"></span>
+                        </a>
+                    </th>
+                    <th scope="col">
+                        <a [href]="" (click)="sortStudents('identifier')">
+                            Identifier
+                            <span *ngIf="sortBy == 'identifier' && !sortReverse" class="glyphicon glyphicon-triangle-bottom"></span>
+                            <span *ngIf="sortBy == 'identifier' && sortReverse" class="glyphicon glyphicon-triangle-top"></span>
+                        </a>
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let student of filteredStudents">
+                    <td><a [routerLink]="['/student/edit/', student?.id]" class="btn btn-link">{{student?.fullName}}</a></td>
+                    <td>{{getGenderName(student?.gender)}}</td>
+                    <td>{{student?.identifier}}</td>
+                    <td>
+                        <a (click)="deleteStudent(student?.id)" class="btn btn-danger btn-sm float-right">
+                            <span class="glyphicon glyphicon-trash"></span>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div>
+            <p>
+                Students count: {{filteredStudents?.length}}
+            </p>
+        </div>
+    </div>
+</div>
+
+
